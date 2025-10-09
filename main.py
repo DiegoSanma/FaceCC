@@ -4,7 +4,8 @@ from facenet_pytorch import InceptionResnetV1, MTCNN
 
 if __name__ == "__main__":
     # Entrenamiento y guardado de embeddings
-    facenet = InceptionResnetV1(pretrained='casia-webface').to(entrenamiento.device)
+    #Para futura iteración, hay que sacar el eval(), porque aquí solo se usa el modelo preentrenado
+    facenet = InceptionResnetV1(pretrained='casia-webface').eval().to(entrenamiento.device)
     mtcnn = MTCNN(image_size=160, margin=0, min_face_size=20, device=entrenamiento.device)
 
     #Guarda las fotos tipo TUI en un archivo .npz, para luego compararlas

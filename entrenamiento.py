@@ -66,36 +66,12 @@ def save_embeddings_with_labels(tar_path_foto, mtcnn, facenet, device):
     print("Embeddings y labels guardados en embeddings_labels.npz")
 
 #Entrenamiento del modelo, finetuning
+#Para la primera iteración, no solo entreno
 def train_model_embeddings(train_set, facenet, mtcnn, device, epochs=10, batch_size=4, learning_rate=0.001):
-    facenet.train()
-    optimizer = torch.optim.Adam(facenet.parameters(), lr=learning_rate)
-    criterion = torch.nn.CrossEntropyLoss()
+    #facenet.train()
 
-    for epoch in range(epochs):
-        random.shuffle(train_set)
-        for i in range(0, len(train_set), batch_size):
-            batch = train_set[i:i+batch_size]
-            images = []
-            labels = []
-            for img, label in batch:
-                face = mtcnn(img)
-                if face is not None:
-                    images.append(face)
-                    labels.append(label)
-            if len(images) == 0:
-                continue
-            images = torch.stack(images).to(device)
-            # Convertir etiquetas a índices
-            unique_labels = list(set(labels))
-            label_to_idx = {label: idx for idx, label in enumerate(unique_labels)}
-            labels_idx = torch.tensor([label_to_idx[label] for label in labels]).to(device)
-
-            optimizer.zero_grad()
-            outputs = facenet(images)
-            loss = criterion(outputs, labels_idx)
-            loss.backward()
-            optimizer.step()
-
-        print(f"Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}")
+    #Aquí iría el entrenamiento del modelo si se quisiera hacer fine-tuning
+    #Por ahora, solo devuelvo el modelo preentrenado, ahí ves tú Jorge si en esta iteración 
+    # quieres hacer fine-tuning o no
 
     return facenet
