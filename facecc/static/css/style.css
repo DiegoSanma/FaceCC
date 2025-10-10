@@ -7,13 +7,12 @@
 }
 
 body {
-    height: 100vh;
+    min-height: 100vh;
     background: linear-gradient(135deg, #1a1a1a, #333);
     color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
 }
 
 /* Título */
@@ -30,7 +29,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 40px;
-    flex-wrap: wrap; /* Para que sea responsive */
+    flex-wrap: wrap;
 }
 
 /* Cámara */
@@ -38,11 +37,22 @@ body {
     position: relative;
     width: 640px;
     height: 480px;
-    border: 3px solid #00ffff;
+    border: 20px solid transparent;
+    border-image: url('{% static "media/frame.png" %}') 30 round; /* imagen del marco */
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
 }
+
+.camera-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 115%;
+    pointer-events: none; /* para que no bloquee clics */
+}
+
 
 video {
     width: 100%;
@@ -68,7 +78,6 @@ video {
 
 /* Botón principal */
 .main-button {
-    margin-top: 20px;
     padding: 20px 60px;
     font-size: 1.5rem;
     font-weight: bold;
@@ -86,3 +95,4 @@ video {
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
     transform: scale(1.05);
 }
+

@@ -1,6 +1,7 @@
 const video = document.getElementById("camera");
 const canvas = document.getElementById("overlay");
 const context = canvas.getContext("2d");
+const button = document.getElementById("takePhotoBtn");
 
 let faceDetected = false;
 let detectionStart = null; // timestamp de cuando apareció la cara
@@ -101,9 +102,8 @@ function captureFrame() {
     
 }
 
-
 // Iniciar todo
-window.addEventListener("load", async () => {
+button.addEventListener("click", async () => {
     await loadModels();
     await startCamera();
     detectFaces();

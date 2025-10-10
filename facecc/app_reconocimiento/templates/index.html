@@ -5,19 +5,19 @@
     <title>FaceCC</title>
 </head>
 <body>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <h1>FaceCC - Usuario</h1>
 
-    <div style="position: relative; display: inline-block;">
-        <video id="camera" autoplay playsinline width="640" height="480"></video>
-        <canvas id="overlay" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
+    <div class="main-container">
+        <div class="side-container">
+            <img src="{% static 'media/logo.png' %}" class="logo" alt="Logo FaceCC">
+            <button class="main-button" id="takePhotoBtn">Tomar Foto</button>
+        </div>
+        <div style="position: relative; display: inline-block;">
+            <video id="camera" autoplay playsinline width="640" height="480"></video>
+            <canvas id="overlay" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
+        </div>
     </div>
-
-    <button id="snap">Tomar foto</button>
-
-    <form id="photoForm" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="image" id="imageInput">
-    </form>
 </body>
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script src="{% static 'js/camera.js' %}"></script>
