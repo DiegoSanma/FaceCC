@@ -1,0 +1,88 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a, #333);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Título */
+.title {
+    font-size: 3rem;
+    margin: 20px 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Contenedor principal con dos columnas */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap; /* Para que sea responsive */
+}
+
+/* Cámara */
+.camera-container {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    border: 3px solid #00ffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Columna derecha */
+.side-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 480px;
+}
+
+/* Logo */
+.logo {
+    width: 200px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Botón principal */
+.main-button {
+    margin-top: 20px;
+    padding: 20px 60px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #00ffff;
+    color: #111;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    transition: 0.3s ease;
+}
+
+.main-button:hover {
+    background: #00cccc;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+    transform: scale(1.05);
+}

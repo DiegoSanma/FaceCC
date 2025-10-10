@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FaceCC</title>
+</head>
+<body>
+    <h1>FaceCC - Usuario</h1>
+
+    <video id="camera" autoplay playsinline width="640" height="480"></video>
+    <button id="snap">Tomar foto</button>
+
+    <form id="photoForm" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="image" id="imageInput">
+    </form>
+</body>
+<script src="{% static 'js/camera.js' %}"></script>
+</html>
+
