@@ -2,6 +2,8 @@ const video = document.getElementById("camera");
 const canvas = document.getElementById("overlay");
 const context = canvas.getContext("2d");
 const button = document.getElementById("takePhotoBtn");
+const resultDiv = document.getElementById("result");
+detectionInterval = null;
 
 let faceDetected = false;
 let detectionStart = null; // timestamp de cuando apareció la cara
@@ -44,7 +46,7 @@ async function loadModels() {
 async function detectFaces() {
     const options = new faceapi.TinyFaceDetectorOptions();
 
-    setInterval(async () => {
+    detectionInterval =  setInterval(async () => {
         const detections = await faceapi.detectAllFaces(video, options);
         context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -93,17 +95,55 @@ function captureFrame() {
     })
     .then(response => response.json())
     .then(data => {
+        showresult(data.name);
         console.log('Respuesta del servidor:', data);
-        alert(data.message);
     })
     .catch(error => {
         console.error('Error al enviar la imagen:', error);
     });
     
+};
+
+function showresult(name){
+    if(detectionInterval){
+        clearInterval(detectionInterval);
+        detectionInterval = null;
+    }
+    if(!name){
+        context.strokeStyle = "#ff0000ff"
+        context.lineWidth = 4;
+        resultDiv.innerHTML = "No reconocido, intente de nuevo";
+        resultDiv.style.display = "block";
+        setTimeout(() => {
+            resultDiv.style.display = "none";
+            button.style.display = "block"; // Mostrar el botón nuevamente
+            video.srcObject.getTracks().forEach(track => track.stop()); // Detener la cámara
+            faceDetected = false; // Reiniciar el estado de detección
+            detectionStart = null; // Reiniciar el timestamp
+            context.clearRect(0, 0, overlay.width, overlay.height);
+        }, 3000);
+        return;
+    }
+    else{
+        resultDiv.innerHTML = `Hola, ${name}`;
+        resultDiv.style.display = "block";
+        context.strokeStyle = "#1ee614ff"
+        context.lineWidth = 4;
+        setTimeout(() => {
+            resultDiv.style.display = "none";
+            button.style.display = "block"; // Mostrar el botón nuevamente
+            video.srcObject.getTracks().forEach(track => track.stop()); // Detener la cámara
+            faceDetected = false; // Reiniciar el estado de detección
+            detectionStart = null; // Reiniciar el timestamp
+            context.clearRect(0, 0, overlay.width, overlay.height);
+        }, 5000);
+    }
 }
 
 // Iniciar todo
 button.addEventListener("click", async () => {
+    button.style.display = "none"; // Ocultar el botón después de hacer clic
+    resultDiv.style.display = "block"; // Ocultar el resultado si está visible
     await loadModels();
     await startCamera();
     detectFaces();

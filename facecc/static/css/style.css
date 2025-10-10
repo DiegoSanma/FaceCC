@@ -96,3 +96,12 @@ video {
     transform: scale(1.05);
 }
 
+.result-box{
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    display: none; /* Oculto por defecto */
+}
