@@ -7,7 +7,11 @@
 <body>
     <h1>FaceCC - Usuario</h1>
 
-    <video id="camera" autoplay playsinline width="640" height="480"></video>
+    <div style="position: relative; display: inline-block;">
+        <video id="camera" autoplay playsinline width="640" height="480"></video>
+        <canvas id="overlay" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
+    </div>
+
     <button id="snap">Tomar foto</button>
 
     <form id="photoForm" method="POST">
@@ -15,6 +19,8 @@
         <input type="hidden" name="image" id="imageInput">
     </form>
 </body>
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script src="{% static 'js/camera.js' %}"></script>
+
 </html>
 

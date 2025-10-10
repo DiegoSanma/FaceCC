@@ -1,39 +1,47 @@
-// Obtener referencias al video y al botón
 const video = document.getElementById("camera");
-const button = document.getElementById("snap");
+const canvas = document.getElementById("overlay");
+const context = canvas.getContext("2d");
 
-// Función para iniciar la cámara
 async function startCamera() {
-    console.log("Iniciando cámara...");
     try {
-        // Solicitar acceso a la cámara
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;   // Mostrar la cámara en el <video>
+        video.srcObject = stream;
     } catch (err) {
         alert("No se pudo acceder a la cámara. Verifica los permisos.");
         console.error(err);
     }
 }
 
-// Función para capturar un frame y enviarlo a un formulario (opcional)
-function captureFrame() {
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext("2d");
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/jpeg");  // Devuelve la imagen en base64
+// Cargar los modelos de face-api.js
+async function loadModels() {
+    const MODEL_URL = '/static/models';
+    await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
 }
 
-// Ejemplo: acción del botón
-button.addEventListener("click", () => {
-    const frame = captureFrame();
-    console.log("Frame capturado:", frame); // Aquí puedes enviarlo al backend
-    alert("Foto tomada! (revisa la consola para el base64)");
+// Detectar caras en tiempo real
+async function detectFaces() {
+    const options = new faceapi.TinyFaceDetectorOptions();
+
+    setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(video, options);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        detections.forEach(det => {
+            const { x, y, width, height } = det.box;
+            context.strokeStyle = "#00FFFF";
+            context.lineWidth = 2;
+            context.strokeRect(x, y, width, height);
+        });
+    }, 100); // cada 100ms
+}
+
+// Iniciar todo
+window.addEventListener("load", async () => {
+    await loadModels();
+    await startCamera();
+    detectFaces();
 });
 
-// Iniciar la cámara cuando cargue la página
-window.addEventListener("load", startCamera);
 
 const snap = document.getElementById("snap");
 const imageInput = document.getElementById("imageInput");
