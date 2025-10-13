@@ -83,8 +83,6 @@ async function captureFrame() {
     ctx.drawImage(video, 0, 0, canvasCapture.width, canvasCapture.height);
     const imageBase64 = canvasCapture.toDataURL("image/jpeg");
 
-    console.log("Foto capturada:", imageBase64);
-
     const response = await fetch("/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
