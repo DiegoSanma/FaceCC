@@ -75,7 +75,7 @@ async function detectFaces() {
     }, 100); // cada 100ms
 }
 
-function captureFrame() {
+async function captureFrame() {
     const canvasCapture = document.createElement("canvas");
     canvasCapture.width = video.videoWidth;
     canvasCapture.height = video.videoHeight;
@@ -85,23 +85,13 @@ function captureFrame() {
 
     console.log("Foto capturada:", imageBase64);
 
-    fetch('/process_image/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken') // Asegúrate de tener la función getCookie definida
-        },
-        body: JSON.stringify({ image: imageBase64 })
-    })
-    .then(response => response.json())
-    .then(data => {
-        showresult(data.name);
-        console.log('Respuesta del servidor:', data);
-    })
-    .catch(error => {
-        console.error('Error al enviar la imagen:', error);
+    const response = await fetch("/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: imageBase64, csrfmiddlewaretoken: getCookie('csrftoken') }),
     });
-    
+    const result = await response.json();
+    showresult(result.name);
 };
 
 function showresult(name){
