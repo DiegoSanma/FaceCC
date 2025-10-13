@@ -28,6 +28,7 @@ def compare_embeddings(emb1, emb2):
     return np.linalg.norm(emb1 - emb2)
 
 def evaluate_model(val_set,model,mt,test_size=0.2, random_state=42):
+    distance_threshold = 1.1
     #Cargo embeddings sacadaos de u-cursos (con los nombres)
     embeddings, labels = load_embeddings("embeddings_.npz")
 
@@ -49,12 +50,15 @@ def evaluate_model(val_set,model,mt,test_size=0.2, random_state=42):
     y_pred = []
     for i, val_emb in enumerate(val_embeddings):
         min_dist = float('inf')
-        pred_label = None
+        pred_label = "unknown" # Default prediction is "unknown"
         for j, emb in enumerate(embeddings):
             dist = compare_embeddings(val_emb, emb)
             if dist < min_dist:
                 min_dist = dist
-                pred_label = labels[j]
+                if min_dist < distance_threshold:
+                    pred_label = labels[j]
+                else:
+                    pred_label = "unknown"
         y_true.append(val_labels[i])
         y_pred.append(pred_label)
     # Calculo métricas
