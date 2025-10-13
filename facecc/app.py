@@ -8,6 +8,10 @@ app = Flask(__name__)
 def user_camera():
     return render_template('index.html')
 
+@app.route('/admin')
+def admin_panel():
+    return render_template('admin.html')
+
 @app.route('/predict', methods=['POST'])
 def process_image():
     data = request.get_json()
