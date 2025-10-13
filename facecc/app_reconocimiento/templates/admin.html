@@ -1,0 +1,101 @@
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FaceCC - Admin</title>
+    <!--<link rel="stylesheet" href="{% static 'css/style-admin.css' %}">-->
+    <link rel="stylesheet" href="../../static/css/style-admin.css"> <!-- Non django href -->
+</head>
+<body>
+    <h1>FaceCC - Panel de Administración</h1>
+
+    <div class="admin-container">
+        <!-- Control Section -->
+        <section class="control-section">
+            <h2>Control del Sistema</h2>
+            <label class="switch">
+                <input type="checkbox" id="appToggle" checked>
+                <span class="slider round"></span>
+            </label>
+            <p id="statusText">Reconocimiento Activado</p>
+        </section>
+
+        <!-- Logs Section -->
+        <section class="logs-section">
+            <h2>Registro de Reconocimientos</h2>
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Persona</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-10-12</td>
+                        <td>09:34</td>
+                        <td>Juan Pérez</td>
+                        <td style="color:green;">Acceso permitido</td>
+                    </tr>
+                    <tr>
+                        <td>2025-10-12</td>
+                        <td>09:41</td>
+                        <td>Desconocido</td>
+                        <td style="color:red;">Acceso denegado</td>
+                    </tr>
+                    <tr>
+                        <td>2025-10-12</td>
+                        <td>10:05</td>
+                        <td>Ana López</td>
+                        <td style="color:green;">Acceso permitido</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Image Upload Section -->
+        <section class="upload-section">
+            <h2>Agregar Nuevas Imágenes</h2>
+            <form id="uploadForm">
+                <input type="file" id="imageUpload" accept="image/*" multiple>
+                <button type="button" id="uploadBtn">Subir Imágenes</button>
+            </form>
+            <div id="previewArea" class="preview-area">
+                <p>No hay imágenes seleccionadas.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Toggle switch functionality (dummy)
+        const toggle = document.getElementById("appToggle");
+        const statusText = document.getElementById("statusText");
+
+        toggle.addEventListener("change", () => {
+            if (toggle.checked) {
+                statusText.textContent = "Reconocimiento Activado";
+                statusText.style.color = "green";
+            } else {
+                statusText.textContent = "Reconocimiento Desactivado";
+                statusText.style.color = "red";
+            }
+        });
+
+        // Dummy upload preview
+        const uploadInput = document.getElementById("imageUpload");
+        const preview = document.getElementById("previewArea");
+
+        uploadInput.addEventListener("change", () => {
+            preview.innerHTML = "";
+            Array.from(uploadInput.files).forEach(file => {
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.classList.add("preview-thumb");
+                preview.appendChild(img);
+            });
+        });
+    </script>
+</body>
+</html>

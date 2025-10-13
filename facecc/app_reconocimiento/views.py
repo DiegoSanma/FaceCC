@@ -23,3 +23,5 @@ def process_image(request):
 
         return JsonResponse({'status': 'success', 'name': reconomiento})
         
+def admin_view(request):
+    return render(request, 'admin.html')
