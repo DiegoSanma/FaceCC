@@ -1,10 +1,10 @@
-from main import app, IA_SERVER, IA_URL
+from app import app, IA_SERVER, IA_URL
 from flask import Flask, render_template, request, jsonify
 import base64 
 import json
 import pickle,os, io
 import numpy as np
-import requests
+import requests, secrets
 from deepface import DeepFace
 from PIL import Image
 
@@ -13,7 +13,7 @@ from PIL import Image
 def user_camera():
     return render_template('index.html')
 
-@app.route('facecc/facecc/predict', methods=['POST'])
+@app.route('/facecc/facecc/predict', methods=['POST'])
 def process_image():
     data = request.get_json()
     image_data = data.get("image", "Sin nombre")
@@ -21,12 +21,20 @@ def process_image():
         format, imgstr = image_data.split(';base64,') 
     except Exception as es:
         return jsonify({'error': 'Invalid image data format'}), 400
-    image_file = base64.b64decode(imgstr)
-    img_pil = Image.open(io.BytesIO(image_file))
+
     reconocimiento = "Desconocido"
+    image_data = base64.b64decode(imgstr)
+    filename = secrets.token_hex(8) + ".jpg"
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    # Guardar el binario como archivo
+    with open(filepath, "wb") as f:
+        f.write(image_data)
+    print("Guardando archivo:", filepath)
+    files = {'file': open(filepath, 'rb')}
+    
     #Todo lo que viene aquí es para usar Deepface
     try:
-        apicall = requests.post(IA_SERVER+IA_URL, img_pil=img_pil)
+        apicall = requests.post(IA_SERVER+IA_URL, files=files)
         if apicall.status_code == 200:
             response = apicall.json()
             reconocimiento = response.get('name', 'Desconocido')

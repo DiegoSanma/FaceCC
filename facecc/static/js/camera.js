@@ -38,7 +38,7 @@ async function startCamera() {
 
 // Cargar los modelos de face-api.js
 async function loadModels() {
-    const MODEL_URL = '/static/models';
+    const MODEL_URL = 'facecc/static/models';
     await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
 }
 
@@ -83,7 +83,7 @@ async function captureFrame() {
     ctx.drawImage(video, 0, 0, canvasCapture.width, canvasCapture.height);
     const imageBase64 = canvasCapture.toDataURL("image/jpeg");
 
-    const response = await fetch("/predict", {
+    const response = await fetch("facecc/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ image: imageBase64, csrfmiddlewaretoken: getCookie('csrftoken') }),
