@@ -97,7 +97,7 @@ function showresult(name){
         clearInterval(detectionInterval);
         detectionInterval = null;
     }
-    if(!name){
+    if(name=="Desconocido"){
         context.strokeStyle = "#ff0000ff"
         context.lineWidth = 4;
         resultDiv.innerHTML = "No reconocido, intente de nuevo";
