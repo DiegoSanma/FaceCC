@@ -16,7 +16,7 @@ for filename in os.listdir(img_folder):
         path = os.path.join(img_folder, filename)
         embedding = DeepFace.represent(
             img_path=path,
-            model_name="Facenet",
+            model_name="ArcFace",
             enforce_detection=False
         )[0]["embedding"]
         
@@ -27,6 +27,6 @@ for filename in os.listdir(img_folder):
         labels_dict[f"{name}.npy"] = name  # aquí puedes poner "Alice Smith" o cualquier formato
 
 # Guardar diccionario en JSON
-with open(os.path.join(embedding_folder, "labels.json"), "w", encoding="utf-8") as f:
-    json.dump(labels_dict, f, ensure_ascii=False, indent=4)
+#with open(os.path.join(embedding_folder, "labels.json"), "w", encoding="utf-8") as f:
+#    json.dump(labels_dict, f, ensure_ascii=False, indent=4)
 print("Embeddings y etiquetas guardadas en", embedding_folder)

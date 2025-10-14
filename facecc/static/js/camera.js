@@ -53,7 +53,7 @@ async function detectFaces() {
         if (detections.length > 0) {
             // Dibuja el cuadro alrededor de la cara
             const { x, y, width, height } = detections[0].box;
-            context.strokeStyle = "#00FFFF";
+            context.strokeStyle = "#ff0000ff";
             context.lineWidth = 2;
             context.strokeRect(x, y, width, height);
 
@@ -119,6 +119,7 @@ function showresult(name){
         context.lineWidth = 4;
         setTimeout(() => {
             resultDiv.style.display = "none";
+            resultDiv.innerHTML = `Esperando`
             button.style.display = "block"; // Mostrar el botón nuevamente
             video.srcObject.getTracks().forEach(track => track.stop()); // Detener la cámara
             faceDetected = false; // Reiniciar el estado de detección

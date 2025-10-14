@@ -43,8 +43,11 @@ def process_image():
     except Exception as e:
         print(f"Error processing image: {e}")
         return jsonify({'error': 'Error processing image'}), 500
-        # Aquí la idea sería realiazar el procesamiento de la imagen y ver si coincide con alguna cara
-        #Luego la entrego al fetch del javascript para que que se vea el resultado
+
+    files['file'].close()
+    #Elimino la imagen que me llego
+    if os.path.exists(filepath):
+        os.remove(filepath)
     return jsonify({'name': reconocimiento})
     
 
