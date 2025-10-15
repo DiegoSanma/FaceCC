@@ -1,12 +1,14 @@
 from app import app, IA_SERVER, IA_URL
-from flask import Flask, render_template, request, jsonify
+# from flask import Flask, render_template, request, jsonify
+from flask import render_template, request, jsonify
 import base64 
-import json
-import pickle,os, io
-import numpy as np
+# import json
+# import pickle,os, io
+import os
+# import numpy as np
 import requests, secrets
-from deepface import DeepFace
-from PIL import Image
+# from deepface import DeepFace
+# from PIL import Image
 
 
 @app.route('/facecc/facecc')

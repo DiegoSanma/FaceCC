@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import json
+# import json
 from deepface import DeepFace
 
 img_folder = "CaraTui"
