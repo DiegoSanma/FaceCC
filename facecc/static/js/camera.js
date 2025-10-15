@@ -7,6 +7,7 @@ detectionInterval = null;
 
 let faceDetected = false;
 let detectionStart = null; // timestamp de cuando apareció la cara
+let photosent = false;
 
 //Obtengo la cookie del csrftoken
 function getCookie(name) {
@@ -62,9 +63,10 @@ async function detectFaces() {
                 detectionStart = Date.now(); // inicio del conteo
             } else {
                 const elapsed = Date.now() - detectionStart;
-                if (elapsed >= 3000) { // 3 segundos
+                if (elapsed >= 3000 && !photosent) { // 3 segundos
                     captureFrame(); // capturar foto
                     faceDetected = false; // reiniciar contador
+                    photosent = true;
                 }
             }
         } else {
@@ -109,6 +111,7 @@ function showresult(name){
             faceDetected = false; // Reiniciar el estado de detección
             detectionStart = null; // Reiniciar el timestamp
             context.clearRect(0, 0, overlay.width, overlay.height);
+            photosent = false;
         }, 3000);
         return;
     }
@@ -125,6 +128,7 @@ function showresult(name){
             faceDetected = false; // Reiniciar el estado de detección
             detectionStart = null; // Reiniciar el timestamp
             context.clearRect(0, 0, overlay.width, overlay.height);
+            photosent = false;
         }, 5000);
     }
 }
