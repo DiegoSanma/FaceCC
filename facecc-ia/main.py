@@ -12,9 +12,11 @@ def identify_face():
     img_bytes = files.read()
     nparr = np.frombuffer(img_bytes, np.uint8)
     img_cv2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    print('toy aqui')
     embedding = DeepFace.represent(img_path=img_cv2,
                                model_name = 'ArcFace',
                            enforce_detection = False)[0]["embedding"]
+    print('sali del embdedding')
     best_match = check_best(embedding)
     files.close()
     return(best_match)
