@@ -7,9 +7,6 @@ backcall==0.2.0
 beautifulsoup4==4.14.2
 bleach==6.2.0
 blinker==1.9.0
-brotlicffi @ file:///C:/b/abs_f4lixvzmxt/croot/brotlicffi_1736183286104/work
-certifi @ file:///C:/miniconda3/conda-bld/certifi_1759786076776/work/certifi
-cffi @ file:///C:/miniconda3/conda-bld/cffi_1760098047237/work
 charset-normalizer==3.4.3
 click==8.3.0
 colorama==0.4.6
