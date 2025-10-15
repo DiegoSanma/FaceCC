@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AMBIENTE="base"
+AMBIENTE="facecc"
 APP="facecc-ia"
 PORT=7011
 

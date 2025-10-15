@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
-import json
-from deepface import DeepFace
+# import json
+# from deepface import DeepFace
 from flask import Flask
 
 app = Flask(__name__)

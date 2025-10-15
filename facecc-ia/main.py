@@ -4,7 +4,7 @@ from deepface import DeepFace
 from utils import check_best
 import numpy as np
 import cv2
-from PIL import Image
+# from PIL import Image
 
 @app.route('/facecc/facecc-ia/predict', methods=['POST'])    
 def identify_face():
