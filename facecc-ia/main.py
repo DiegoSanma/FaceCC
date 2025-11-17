@@ -17,6 +17,7 @@ def identify_face():
                                model_name = 'ArcFace',
                            enforce_detection = False)[0]["embedding"]
     print('sali del embdedding')
+
     best_match = check_best(embedding)
     files.close()
     return(best_match)

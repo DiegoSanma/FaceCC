@@ -1,5 +1,7 @@
-import math,os,json
+import math,os,json,random
 import numpy as np
+import torch
+from insightface.app import FaceAnalysis
 
 def check_best(embedding):
     best_match = [None, math.inf]
@@ -16,3 +18,4 @@ def check_best(embedding):
         return {'name': name}
     else:
         return {'name': 'Desconocido'}
+    
