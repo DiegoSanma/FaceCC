@@ -3,8 +3,9 @@ from flask import request, jsonify
 from deepface import DeepFace
 from utils import check_best
 import numpy as np
-import cv2
+import cv2, joblib
 # from PIL import Image
+
 
 @app.route('/facecc/facecc-ia/predict', methods=['POST'])    
 def identify_face():
