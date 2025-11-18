@@ -9,7 +9,7 @@ fi
 if [[ "$ACCION" == "web" ]]; then
     APPS_DESTINATION="$HOME/facecc"
     runTest mkdir -p "$APPS_DESTINATION"
-    for app in facecc-front facecc-ia 
+    for app in facecc facecc-ia 
     do
         echo "instalando $app en $APPS_DESTINATION ..."
         if [[ -f "$APPS_DESTINATION/bajar_$app.sh" ]]; then
