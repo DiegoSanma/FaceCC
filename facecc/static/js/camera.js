@@ -63,7 +63,8 @@ async function detectFaces() {
                 detectionStart = Date.now(); // inicio del conteo
             } else {
                 const elapsed = Date.now() - detectionStart;
-                if (elapsed >= 3000 && !photosent) { // 3 segundos
+                // if (elapsed >= 3000 && !photosent) { // 3 segundos
+                if (elapsed >= 100 && !photosent) { // .5 segundos
                     captureFrame(); // capturar foto
                     faceDetected = false; // reiniciar contador
                     photosent = true;
@@ -99,6 +100,24 @@ function showresult(name){
         clearInterval(detectionInterval);
         detectionInterval = null;
     }
+
+    if(name == "Sistema desactivado"){
+        context.strokeStyle = "#ff9800"; // Orange color
+        context.lineWidth = 4;
+        resultDiv.innerHTML = "Sistema desactivado";
+        resultDiv.style.display = "block";
+        setTimeout(() => {
+            resultDiv.style.display = "none";
+            button.style.display = "block";
+            video.srcObject.getTracks().forEach(track => track.stop());
+            faceDetected = false;
+            detectionStart = null;
+            context.clearRect(0, 0, overlay.width, overlay.height);
+            photosent = false;
+        }, 3000);
+        return;
+    }
+
     if(name=="Desconocido"){
         context.strokeStyle = "#ff0000ff"
         context.lineWidth = 4;
@@ -142,3 +161,43 @@ button.addEventListener("click", async () => {
     detectFaces();
 });
 
+
+// System ready | Agregado por Lucas | Evaluar funcionalidad
+// let systemReady = false;
+
+// async function checkSystemReady() {
+//     try {
+//         const resp = await fetch('/facecc/facecc-ia/health');
+//         const data = await resp.json();
+//         return data.ready;
+//     } catch (e) {
+//         console.error('Health check failed:', e);
+//         return false;
+//     }
+// }
+
+// async function waitForSystem() {
+//     const statusDiv = document.getElementById('resultDiv'); // adjust to your UI element
+//     statusDiv.textContent = 'Sistema iniciando...';
+//     statusDiv.style.display = 'block';
+    
+//     while (!systemReady) {
+//         systemReady = await checkSystemReady();
+//         if (!systemReady) {
+//             await new Promise(resolve => setTimeout(resolve, 1000)); // wait 1s
+//         }
+//     }
+    
+//     statusDiv.style.display = 'none';
+// }
+
+// // Call on page load
+// button.addEventListener("click", async () => {
+//     button.style.display = "none";
+//     resultDiv.style.display = "block";
+    
+//     await waitForSystem(); // Wait for model to be ready
+//     await loadModels();
+//     await startCamera();
+//     detectFaces();
+// });
