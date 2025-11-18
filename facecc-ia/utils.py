@@ -52,7 +52,7 @@ def preprocess(img_bgr):
     tensor = transform(img_rgb).unsqueeze(0)  # [1, 3, 112, 112]
     return tensor
 
-def get_embedding(img_tensor):
+def get_embedding(model,img_tensor):
     with torch.no_grad():
         # El embedding debe salir del backbone, NO de la cabeza siamese
         emb = model.backbone(img_tensor)   # shape [1, 512]
@@ -64,15 +64,15 @@ def check_best(model,embedding):
     for file in os.listdir("Embeddings"):
         if file.endswith(".npy"):
             db_embedding = np.load(os.path.join("Embeddings", file))
-            distance = 1 - svc_model.predict_proba([np.concatenate([embedding, db_embedding])])[0][1]
+            distance = torch.nn.functional.cosine_similarity(embedding, db_embedding, dim=0).item()
             print(f"Comparing with {file}, distance: {distance}")
             if best_match is None or distance < best_match[1]:
                 best_match = (file, distance)
-    if best_match[1] < 1-0.002:  # umbral de distancia
+    if best_match[1] < 0.5:  # umbral de distancia
         with open(os.path.join("Embeddings", "labels.json"), "r", encoding="utf-8") as f:
             labels_dict = json.load(f)
         name = labels_dict.get(best_match[0], "Desconocido")
         return {'name': name}
     else:
-        return {'name': 'Desconocido'}
+        return json.dumps({'name': 'Desconocido'})
     
