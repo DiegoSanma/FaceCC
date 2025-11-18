@@ -1,6 +1,7 @@
 import math,os,json,random, cv2
 import torchvision.transforms as T
 import numpy as np
+from PIL import Image
 import torch
 import torch.nn as nn
 from torchvision import models
@@ -47,9 +48,13 @@ transform = T.Compose([
     T.Resize((224, 224)),
     T.ToTensor()
 ])
-def preprocess(img_bgr):
-    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-    tensor = transform(img_rgb).unsqueeze(0)  # [1, 3, 112, 112]
+def preprocess(img_cv2):
+    # img_cv2 viene de cv2.imread en BGR
+    img_rgb = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2RGB)
+    img_pil = Image.fromarray(img_rgb)  # convertir a PIL
+
+    tensor = transform(img_pil)  # ahora sí funciona el transform
+    tensor = tensor.unsqueeze(0)  # [1, 3, 112, 112]
     return tensor
 
 def get_embedding(model,img_tensor):
@@ -59,20 +64,46 @@ def get_embedding(model,img_tensor):
         emb = emb.cpu().numpy().flatten()  # [512]
     return emb
 
-def check_best(model,embedding):
-    best_match = [None, math.inf]
-    for file in os.listdir("Embeddings"):
+
+def check_best(model, embedding, threshold=0.67):
+    """
+    embedding: tensor de tamaño [D]
+    """
+    best_match = (None, 0)
+
+    # asegurar tensor en CPU
+    embedding = embedding.cpu() if isinstance(embedding, torch.Tensor) else torch.tensor(embedding)
+
+    for file in os.listdir("TUI_embeddings"):
         if file.endswith(".npy"):
-            db_embedding = np.load(os.path.join("Embeddings", file))
-            distance = torch.nn.functional.cosine_similarity(embedding, db_embedding, dim=0).item()
+            db_embedding = np.load(os.path.join("TUI_embeddings", file))   # numpy -> tensor
+            db_embedding = torch.tensor(db_embedding, dtype=torch.float32)
+
+            # calcular similitud coseno como distancia
+            distance = torch.nn.functional.cosine_similarity(
+                embedding, db_embedding, dim=0
+            ).item()
+
             print(f"Comparing with {file}, distance: {distance}")
-            if best_match is None or distance < best_match[1]:
+
+            # guardar el mejor (menor distancia)
+            if distance > best_match[1]:
                 best_match = (file, distance)
-    if best_match[1] < 0.5:  # umbral de distancia
-        with open(os.path.join("Embeddings", "labels.json"), "r", encoding="utf-8") as f:
+
+    file_name, dist = best_match
+
+    # si no hay match o sobre umbral → desconocido
+    if file_name is None or dist < threshold:
+        return {"name": "Desconocido"}
+
+    # cargar nombres desde labels.json si existe
+    labels_path = os.path.join("TUI_embeddings", "labels.json")
+    if os.path.exists(labels_path):
+        with open(labels_path, "r", encoding="utf-8") as f:
             labels_dict = json.load(f)
-        name = labels_dict.get(best_match[0], "Desconocido")
-        return {'name': name}
+        name = labels_dict.get(file_name, "Desconocido")
+        print(f"Found label in JSON: {name}")
     else:
-        return json.dumps({'name': 'Desconocido'})
-    
+        name = file_name.replace(".npy", "")
+
+    return {"name": name, "distance": float(dist)}

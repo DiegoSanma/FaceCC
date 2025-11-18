@@ -3,6 +3,7 @@ import torch
 import torchvision.transforms as T
 import numpy as np
 from torchvision import transforms
+from utils import SiameseArcFace
 from PIL import Image
 
 # -------- CONFIG --------
@@ -14,8 +15,10 @@ IMG_SIZE = (224, 224)   # cámbialo si tu modelo usa otro tamaño
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+model = SiameseArcFace()
+
 # cargar modelo
-model = torch.load(MODELO_PATH, map_location=device)
+model.load_state_dict(torch.load(MODELO_PATH, map_location="cpu"))
 model.eval()
 model.to(device)
 torch.set_grad_enabled(False)

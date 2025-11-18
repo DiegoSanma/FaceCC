@@ -8,9 +8,8 @@ import os
 import secrets
 import tempfile
 import time
-import joblib
 
-model_face = '"best_siamese_arcface.pt"'
+model_face = 'best_siamese_arcface.pt'
 model = SiameseArcFace()
 model.load_state_dict(torch.load(model_face, map_location=torch.device('cpu')))
 model.eval()
@@ -38,7 +37,7 @@ def identify_face():
     t2 = time.time()
     print(f"Embedding generation: {(t2-t1)*1000:.0f}ms")
     
-    best_match = check_best(embedding)
+    best_match = check_best(model,embedding)
     t3 = time.time()
     print(f"Matching: {(t3-t2)*1000:.0f}ms")
     print(f"Total: {(t3-t0)*1000:.0f}ms")
