@@ -1,27 +1,39 @@
 from app import app
 from flask import request, jsonify
-from deepface import DeepFace
-from utils import check_best
+import torch
+from utils import check_best, preprocess, get_embedding, SiameseArcFace
 import numpy as np
 import cv2, joblib
 # from PIL import Image
 
+model_face = '"best_siamese_arcface.pt"'
+model = SiameseArcFace()
+model.load_state_dict(torch.load(model_face, map_location=torch.device('cpu')))
+model.eval()
+
 
 @app.route('/facecc/facecc-ia/predict', methods=['POST'])    
 def identify_face():
-    files = request.files['file']
-    img_bytes = files.read()
+    file = request.files['file']
+    img_bytes = file.read()
     nparr = np.frombuffer(img_bytes, np.uint8)
     img_cv2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    print('toy aqui')
-    embedding = DeepFace.represent(img_path=img_cv2,
-                               model_name = 'ArcFace',
-                           enforce_detection = False)[0]["embedding"]
-    print('sali del embdedding')
 
-    best_match = check_best(embedding)
-    files.close()
-    return(best_match)
+    print("toy aqui")
+
+    # Preprocesar → tensor
+    img_tensor = preprocess(img_cv2)
+
+    # Embedding con tu modelo torch
+    embedding = get_embedding(model, img_tensor)
+
+    print("sali del embedding")
+
+    # Buscar mejor match
+    best_match = check_best(model,embedding)
+
+    return best_match
+
 
 if __name__ == "__main__":
     app.run(port=7002)

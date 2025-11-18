@@ -1,32 +1,57 @@
 import os
+import torch
+import torchvision.transforms as T
 import numpy as np
-# import json
-from deepface import DeepFace
+from torchvision import transforms
+from PIL import Image
 
-img_folder = "CaraTui"
-embedding_folder = "Embeddings"
-os.makedirs(embedding_folder, exist_ok=True)
+# -------- CONFIG --------
+CARPETA_IMAGENES = "./CaraTUI"
+CARPETA_EMBEDDINGS = "./TUI_embeddings"
+MODELO_PATH = "best_siamese_arcface.pt"
+IMG_SIZE = (224, 224)   # cámbialo si tu modelo usa otro tamaño
+# ------------------------
 
-labels_dict = {}  # aquí guardaremos label bonito
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-facenet_model = DeepFace.build_model("Facenet")
+# cargar modelo
+model = torch.load(MODELO_PATH, map_location=device)
+model.eval()
+model.to(device)
+torch.set_grad_enabled(False)
 
-for filename in os.listdir(img_folder):
-    if filename.lower().endswith((".jpg", ".png", ".jpeg")):
-        path = os.path.join(img_folder, filename)
-        embedding = DeepFace.represent(
-            img_path=path,
-            model_name="ArcFace",
-            enforce_detection=False
-        )[0]["embedding"]
-        
-        name, _ = os.path.splitext(filename)
-        # Guardamos embedding
-        np.save(os.path.join(embedding_folder, f"{name}.npy"), embedding)
-        # Guardamos label bonito
-        labels_dict[f"{name}.npy"] = name  # aquí puedes poner "Alice Smith" o cualquier formato
+# transformaciones
+transform = T.Compose([
+    T.Resize((224, 224)),
+    T.ToTensor()
+])
 
-# Guardar diccionario en JSON
-#with open(os.path.join(embedding_folder, "labels.json"), "w", encoding="utf-8") as f:
-#    json.dump(labels_dict, f, ensure_ascii=False, indent=4)
-print("Embeddings y etiquetas guardadas en", embedding_folder)
+# crear carpeta de embeddings si no existe
+os.makedirs(CARPETA_EMBEDDINGS, exist_ok=True)
+
+# recorrer imágenes
+for img_name in os.listdir(CARPETA_IMAGENES):
+    ruta = os.path.join(CARPETA_IMAGENES, img_name)
+
+    try:
+        img = Image.open(ruta).convert("RGB")
+    except:
+        print(f"❌ No se pudo abrir: {img_name}")
+        continue
+
+    tensor = transform(img).unsqueeze(0).to(device)
+
+    # generar embedding (ajústalo si tu modelo usa otra forma de forward)
+    embedding = model.backbone(tensor)  
+    embedding = embedding.squeeze().cpu().numpy()
+
+    # nombre de guardado .npy
+    nombre_archivo = os.path.splitext(img_name)[0] + ".npy"
+    ruta_guardado = os.path.join(CARPETA_EMBEDDINGS, nombre_archivo)
+
+    # Guardar en npy
+    np.save(ruta_guardado, embedding)
+
+    print(f"💾 Guardado: {nombre_archivo}")
+
+print("\n✨ Embeddings generados y guardados en ./TUI_embeddings/")
