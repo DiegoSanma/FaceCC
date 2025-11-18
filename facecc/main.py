@@ -22,7 +22,7 @@ from scipy.spatial.distance import cosine # TODO Needs scipy
 
 SYSTEM_STATE_FILE = os.path.join(os.path.dirname(__file__), '..', 'system_state.json')
 RECOGNITION_LOG_FILE = os.path.join(os.path.dirname(__file__), '..', 'logs', 'recognition.log')
-IA_EMBEDDINGS_DIR = os.path.join(os.path.dirname(__file__), '..', 'facecc-ia', 'Embeddings')
+IA_EMBEDDINGS_DIR = os.path.join(os.path.dirname(__file__), '..', 'facecc-ia', 'TUI_embeddings')
 IA_LABELS_FILE = os.path.join(IA_EMBEDDINGS_DIR, 'labels.json')
 
 os.makedirs(os.path.dirname(SYSTEM_STATE_FILE), exist_ok=True)
@@ -194,7 +194,7 @@ def add_face():
         
         # region Duplicate check | Requires scipy
         # Check for duplicate face (compare embeddings)
-        SIMILARITY_THRESHOLD = 0.4  # adjust based on testing (lower = stricter)
+        SIMILARITY_THRESHOLD = 0.9  # adjust based on testing (lower = stricter)
         
         for existing_file in os.listdir(IA_EMBEDDINGS_DIR):
             if existing_file.endswith('.npy'):

@@ -50,29 +50,33 @@ def generate_embedding():
     """Generate embedding for admin face registration"""
     if 'file' not in request.files:
         return jsonify({'error': 'No file'}), 400
-    
+
     file = request.files['file']
     temp_path = None
-    
+
     try:
-        # Save temp file
+        # Guardar archivo temporal
         temp_dir = tempfile.gettempdir()
         temp_filename = f"{secrets.token_hex(8)}.jpg"
         temp_path = os.path.join(temp_dir, temp_filename)
         file.save(temp_path)
-        
-        # Generate embedding with face detection enforced
-        result = model.backbone(temp_path)
-        
-        if not result:
-            return jsonify({'error': 'No face detected'}), 400
-        
-        embedding = result[0]["embedding"]
-        
-        # Clean up
-        if temp_path and os.path.exists(temp_path):
-            os.remove(temp_path)
-        
+
+        # Leer imagen como BGR
+        img_bgr = cv2.imread(temp_path)
+        if img_bgr is None:
+            return jsonify({'error': 'Invalid image'}), 400
+
+        # Convertir a tensor y obtener embedding
+        img_tensor = preprocess(img_bgr)
+
+        with torch.no_grad():
+            model.eval()
+            embedding = model.backbone(img_tensor)
+            embedding = embedding.squeeze().cpu().numpy().tolist()  # serializable
+
+        # Borrar imagen temporal
+        os.remove(temp_path)
+
         return jsonify({'embedding': embedding})
         
     except ValueError as e:

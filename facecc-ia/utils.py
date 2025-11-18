@@ -65,7 +65,7 @@ def get_embedding(model,img_tensor):
     return emb
 
 
-def check_best(model, embedding, threshold=0.67):
+def check_best(model, embedding, threshold=0.675):
     """
     embedding: tensor de tamaño [D]
     """
