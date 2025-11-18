@@ -7,8 +7,6 @@ import base64
 import os
 # import numpy as np
 import requests, secrets
-# from deepface import DeepFace
-# from PIL import Image
 print(app.template_folder)
 
 import json
