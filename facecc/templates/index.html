@@ -1,28 +1,38 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>FaceCC</title>
-</head>
-<body>
+    <meta charset="UTF-8">
+    <title>FaceCC - Reconocimiento Facial</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <h1>FaceCC - Usuario</h1>
+</head>
 
-    <div class="main-container">
-        <div class="side-container">
+<body>
+    <div class="app-container">
+
+        <!-- Panel lateral -->
+        <aside class="sidebar">
             <img src="{{ url_for('static', filename='media/logo.png') }}" class="logo" alt="Logo FaceCC">
-            <button class="main-button" id="takePhotoBtn">Tomar Foto</button>
-            <div id="result" class="result-box">Esperando...</div>
-        </div>
-        <div style="position: relative; display: inline-block;">
-            <video id="camera" autoplay playsinline width="640" height="480"></video>
-            <canvas id="overlay" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
-            <img src="{{ url_for('static', filename='media/frame.png') }}" class="camera-frame" alt="Camera Icon">
-        </div>
+
+            <h2 class="title">Reconocimiento Facial</h2>
+
+            <button class="main-button pulse" id="takePhotoBtn">
+                <span>📸 Capturar Rostro</span>
+            </button>
+
+            <div class="result-card" id="result">
+                <span>Esperando captura...</span>
+            </div>
+        </aside>
+
+        <!-- Vista de cámara -->
+    <main class="camera-container">
+        <video id="camera" autoplay playsinline></video>
+        <canvas id="overlay"></canvas>
+    </main>
+
     </div>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
-
 </html>
-

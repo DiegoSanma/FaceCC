@@ -64,7 +64,7 @@ async function detectFaces() {
             } else {
                 const elapsed = Date.now() - detectionStart;
                 // if (elapsed >= 3000 && !photosent) { // 3 segundos
-                if (elapsed >= 100 && !photosent) { // .5 segundos
+                if (elapsed >= 1000 && !photosent) { // .5 segundos
                     captureFrame(); // capturar foto
                     faceDetected = false; // reiniciar contador
                     photosent = true;
@@ -126,6 +126,7 @@ function showresult(name){
         setTimeout(() => {
             resultDiv.style.display = "none";
             button.style.display = "block"; // Mostrar el botón nuevamente
+            resultDiv.innerHTML = `Esperando`;
             video.srcObject.getTracks().forEach(track => track.stop()); // Detener la cámara
             faceDetected = false; // Reiniciar el estado de detección
             detectionStart = null; // Reiniciar el timestamp
@@ -135,13 +136,13 @@ function showresult(name){
         return;
     }
     else{
-        resultDiv.innerHTML = `Hola, ${name}`;
+        resultDiv.innerHTML = `¡Hola, Bienvenid@ al DCC!`;//${name}`;
         resultDiv.style.display = "block";
         context.strokeStyle = "#1ee614ff"
         context.lineWidth = 4;
         setTimeout(() => {
             resultDiv.style.display = "none";
-            resultDiv.innerHTML = `Esperando`
+            resultDiv.innerHTML = `Esperando captura ...`;
             button.style.display = "block"; // Mostrar el botón nuevamente
             video.srcObject.getTracks().forEach(track => track.stop()); // Detener la cámara
             faceDetected = false; // Reiniciar el estado de detección
