@@ -1,0 +1,12 @@
+ 1. .gitignore
+ 2. system_state.json
+ 3. facecc/ main.py
+ 4. facecc/ system_state.json
+ 5. style-admin.css
+ 6. admin.js
+ 7. camera.js
+ 8. admin.html
+ 9. facecc-ia/ main.py
+10. facecc-ia/ utils.py
+
+// Uno de los system_state es redundante, dependiendo de donde se corran los servidores. (~/facecc/ o ~/facecc/facecc/||~/facecc/facecc-ia/)
